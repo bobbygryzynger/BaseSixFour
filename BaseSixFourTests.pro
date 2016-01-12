@@ -8,10 +8,7 @@ CONFIG += c++11
 
 TEMPLATE = app
 
-SYS_LIB_PATH = /usr/local/lib
-SYS_INC_PATH = /usr/local/include
-
-INCLUDEPATH += $${SYS_INC_PATH}
+INCLUDEPATH += /usr/local/include
 INCLUDEPATH += include/
 
 LIBS += -L/usr/lib/x86_64-linux-gnu
