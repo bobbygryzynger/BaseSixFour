@@ -35,5 +35,10 @@ TEST_F(BaseSixFourTests, TestEncode){
                         "dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo\n"
                         "ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
 
-    ASSERT_STREQ(BaseSixFour::encode(in).c_str(), out.c_str());
+    std::vector<uint8_t> inVec;
+    for(size_t i = 0; i < in.length(); i++){
+        inVec.push_back(in.at(i));
+    }
+
+    ASSERT_STREQ(BaseSixFour::encode(inVec).c_str(), out.c_str());
 }
