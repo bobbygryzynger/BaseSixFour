@@ -8,13 +8,14 @@ CONFIG += c++11
 
 TEMPLATE = app
 
-INCLUDEPATH += /usr/local/include
-INCLUDEPATH += include/
+INCLUDEPATH += /usr/local/include \
+               include/
 
 LIBS += -L/usr/lib/x86_64-linux-gnu
 LIBS += -lgtest -lpthread
 
 HEADERS += include/BaseSixFour.h
 
-SOURCES += tests/BaseSixFourTests.cpp \
-           tests/main.cpp
+SOURCES +=  src/BaseSixFour.cpp \
+            tests/BaseSixFourTests.cpp \
+            tests/main.cpp
