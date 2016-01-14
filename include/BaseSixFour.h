@@ -8,7 +8,11 @@ class BaseSixFour
 
     public:
 
-        static const std::string charset;
+        static const struct CHARSET {
+            static const std::string MIME;
+        } CHARSET;
+
+        static std::string encode(std::string in);
 
         BaseSixFour();
 };
