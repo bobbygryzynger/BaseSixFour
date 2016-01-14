@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "include/BasesSixFour.h"
+#include "include/BaseSixFour.h"
 
 using namespace std;
 
