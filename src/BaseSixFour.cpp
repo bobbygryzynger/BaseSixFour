@@ -1,7 +1,7 @@
 #include "BaseSixFour.h"
 
-const std::string BaseSixFour::CHARSET::MIME =  "abcdefghijklmnopqrstuvwxyz"
-                                                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const std::string BaseSixFour::CHARSET::MIME =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                                "abcdefghijklmnopqrstuvwxyz"
                                                 "/+=";
 
 std::string BaseSixFour::encode(std::vector<uint8_t> in){
@@ -13,18 +13,22 @@ std::string BaseSixFour::encode(std::vector<uint8_t> in){
 
         uint index = 0;
 
+
         if(i == 0){
             index =  (in.at(i) >> 2) & 0x3f;
-
+            ret += BaseSixFour::CHARSET::MIME.at(index);
             std::cout << (char)in.at(i) << ": " << index << std::endl;
         }else if(i == 1){
             index = ((in.at(i-1) & 0x03) << 4) + (in.at(i) >> 4);
+            ret += BaseSixFour::CHARSET::MIME.at(index);
             std::cout << (char)in.at(i) << ": " << index << std::endl;
         }else if(i == 2){
             index = ((in.at(i-1) << 2) + (in.at(i) >> 6)) & 0x3f;
+            ret += BaseSixFour::CHARSET::MIME.at(index);
             std::cout << (char)in.at(i) << ": " << index << std::endl;
         }else{
-            index = in.at(i) & 0x3f;
+            index = in.at(i-1) & 0x3f;
+            ret += BaseSixFour::CHARSET::MIME.at(index);
             std::cout << (char)in.at(i-1) << ": " << index << std::endl;
         }
     }
