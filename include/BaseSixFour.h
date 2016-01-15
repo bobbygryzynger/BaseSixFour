@@ -15,6 +15,10 @@ class BaseSixFour
             static const std::string MIME;
         } CHARSET;
 
+        static const char PAD_CHAR;
+        static const uint LINE_LEN;
+        static const std::string LINE_TERM;
+
         static std::string encode(const std::vector<uint8_t> &in);
         static std::string encodeOctets(uint8_t *in, uint len);
 
