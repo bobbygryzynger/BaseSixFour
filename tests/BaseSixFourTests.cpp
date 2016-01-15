@@ -40,5 +40,5 @@ TEST_F(BaseSixFourTests, TestEncode){
         inVec.push_back(in.at(i));
     }
 
-    ASSERT_STREQ(BaseSixFour::encode(inVec).c_str(), out.c_str());
+    ASSERT_STREQ(out.c_str(), BaseSixFour::encode(inVec).c_str());
 }

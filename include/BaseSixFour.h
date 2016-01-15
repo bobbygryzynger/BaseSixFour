@@ -15,10 +15,14 @@ class BaseSixFour
             static const std::string MIME;
         } CHARSET;
 
-        static std::string encode(std::vector<uint8_t> in);
+        static std::string encode(const std::vector<uint8_t> &in);
         static std::string encodeOctets(uint8_t *in, uint len);
 
         BaseSixFour();
+
+    private:
+        static const uint ENCODE_OCTETS = 3;
+        static const uint ENCODED_SIZE = 4;
 };
 
 #endif // BASESSIXFOUR_H
