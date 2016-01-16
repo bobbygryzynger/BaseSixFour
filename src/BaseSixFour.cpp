@@ -42,11 +42,12 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
 
     for(size_t i = 1; i < totEncodedChars; i++){
         if(i % LINE_LEN == 0){
-            ret.insert(i + (encodedLines * 2), LINE_TERM);
+            ret.insert(i + (encodedLines * LINE_TERM.length()), LINE_TERM);
             encodedLines++;
         }
     }
 
+    inPtr = NULL;
     delete inPtr;
 
     return ret;

@@ -21,7 +21,7 @@ class BaseSixFourTests : public ::testing::Test {
         }
 };
 
-TEST_F(BaseSixFourTests, TestEncode){
+TEST_F(BaseSixFourTests, EncodeText){
 
     //from: https://en.wikipedia.org/wiki/Base64#Examples
     std::string in =    "Man is distinguished, not only by his reason, but by this singular passion from "
