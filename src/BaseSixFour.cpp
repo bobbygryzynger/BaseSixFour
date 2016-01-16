@@ -2,8 +2,7 @@
 
 const std::string BaseSixFour::CHARSET::MIME =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                                 "abcdefghijklmnopqrstuvwxyz"
-                                                "0123456789"
-                                                "/+";
+                                                "0123456789+/";
 const char BaseSixFour::PAD_CHAR = '=';
 const uint BaseSixFour::LINE_LEN = 76;
 const std::string BaseSixFour::LINE_TERM = "\r\n";
