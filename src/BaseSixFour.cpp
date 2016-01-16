@@ -13,6 +13,8 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
     using namespace std;
     string ret = "";
     string encoded = "";
+    size_t totEncodedChars = 0;
+    size_t encodedLines = 0;
     uint8_t* inPtr = new uint8_t[ENCODE_OCTETS];
 
     for(size_t i = 0; i < in.size(); i+=ENCODE_OCTETS){
@@ -26,27 +28,22 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
             inPtr[0] = in.data()[i];
             inPtr[1] = in.data()[i+1];
             inPtr[2] = 0;
-            encoded = encodeOctets(inPtr, 2);
-            encoded += PAD_CHAR;
+            encoded = encodeOctets(inPtr, 2) + PAD_CHAR;
         }else{
             inPtr[0] = in.data()[i];
             inPtr[1] = 0;
             inPtr[2] = 0;
-            encoded = encodeOctets(inPtr, 1);
-            encoded += PAD_CHAR + PAD_CHAR;
+            encoded = encodeOctets(inPtr, 1) + PAD_CHAR + PAD_CHAR;
         }
 
-        //the next encoded sequence will exceed the line length
-        if(ret.length() / LINE_LEN < (ret.length() + encoded.length()) / LINE_LEN){
+        ret += encoded;
+        totEncodedChars += ENCODED_SIZE;
+    }
 
-            for(int j = 0; j < encoded.length(); j++){
-                ret += encoded.at(j);
-                if(ret.length() % LINE_LEN == 0){
-                    ret += LINE_TERM;
-                }
-            }
-        }else{
-            ret += encoded;
+    for(size_t i = 1; i < totEncodedChars; i++){
+        if(i % LINE_LEN == 0){
+            ret.insert(i + (encodedLines * 2), LINE_TERM);
+            encodedLines++;
         }
     }
 
