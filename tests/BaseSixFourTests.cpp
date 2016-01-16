@@ -77,7 +77,7 @@ TEST_F(BaseSixFourTests, EncodeFile){
         "qVKkm5TqTm3Kc5NylJtttts//9k=";
 
     //read image from file
-    std::ifstream ifs("../BaseSixFour/tests/data/icon.jpg", std::ios::binary);
+    std::ifstream ifs("../tests/data/icon.jpg", std::ios::binary);
     ifs.seekg(0, std::ios::end);
     std::vector<char> charVec(ifs.tellg());
     ifs.seekg(0, std::ios::beg);
