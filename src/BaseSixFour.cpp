@@ -11,10 +11,10 @@ const std::string BaseSixFour::LINE_TERM = "\r\n";
 std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
 
     using namespace std;
+
     string ret = "";
-    string encoded = "";
+    string encodedChars = "";
     size_t totEncodedChars = 0;
-    size_t encodedLines = 0;
     uint8_t* inPtr = new uint8_t[ENCODE_OCTETS];
 
     for(size_t i = 0; i < in.size(); i+=ENCODE_OCTETS){
@@ -23,28 +23,33 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
             inPtr[0] = in.data()[i];
             inPtr[1] = in.data()[i+1];
             inPtr[2] = in.data()[i+2];
-            encoded = encodeOctets(inPtr, 3);
+            encodedChars = encodeOctetSet(inPtr);
         }else if(i+ENCODE_OCTETS-2 < in.size()){
             inPtr[0] = in.data()[i];
             inPtr[1] = in.data()[i+1];
             inPtr[2] = 0;
-            encoded = encodeOctets(inPtr, 2) + PAD_CHAR;
+            encodedChars = encodeOctetSet(inPtr).substr(0, 3) + PAD_CHAR;
         }else{
             inPtr[0] = in.data()[i];
             inPtr[1] = 0;
             inPtr[2] = 0;
-            encoded = encodeOctets(inPtr, 1) + PAD_CHAR + PAD_CHAR;
+            encodedChars = encodeOctetSet(inPtr).substr(0, 2) + PAD_CHAR + PAD_CHAR;
         }
 
-        ret += encoded;
+        //the next encoded sequence will exceed the line length
+        if((totEncodedChars + ENCODED_SIZE) / LINE_LEN > totEncodedChars / LINE_LEN){
+            for(uint j = 0; j < ENCODED_SIZE; j++){
+                ret += encodedChars.at(j);
+                //the end of the line has been reached
+                if((totEncodedChars + j+1) % LINE_LEN == 0){
+                    ret += LINE_TERM;
+                }
+            }
+        }else{
+            ret += encodedChars;
+        }
+
         totEncodedChars += ENCODED_SIZE;
-    }
-
-    for(size_t i = 1; i < totEncodedChars; i++){
-        if(i % LINE_LEN == 0){
-            ret.insert(i + (encodedLines * LINE_TERM.length()), LINE_TERM);
-            encodedLines++;
-        }
     }
 
     inPtr = NULL;
@@ -53,7 +58,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
     return ret;
 }
 
-std::string BaseSixFour::encodeOctets(uint8_t *in, uint len){
+std::string BaseSixFour::encodeOctetSet(uint8_t *in){
 
     using namespace std;
 
@@ -73,13 +78,6 @@ std::string BaseSixFour::encodeOctets(uint8_t *in, uint len){
         }
 
         ret += CHARSET::MIME.at(charsetIdx);
-
-        //end of input
-        if((len == 1 && i == 1) || (len == 2 && i == 2)){
-            break;
-        }
-
-
     }
 
     return ret;

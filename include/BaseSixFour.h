@@ -20,7 +20,7 @@ class BaseSixFour
         static const std::string LINE_TERM;
 
         static std::string encode(const std::vector<uint8_t> &in);
-        static std::string encodeOctets(uint8_t *in, uint len);
+        static std::string encodeOctetSet(uint8_t *in);
 
         BaseSixFour();
 
