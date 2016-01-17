@@ -4,7 +4,7 @@ const std::string BaseSixFour::CHARSET::MIME =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                                 "abcdefghijklmnopqrstuvwxyz"
                                                 "0123456789+/";
 const char BaseSixFour::PAD_CHAR = '=';
-const uint BaseSixFour::LINE_LEN = 76;
+const unsigned int BaseSixFour::LINE_LEN = 76;
 const std::string BaseSixFour::LINE_TERM = "\r\n";
 
 std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
@@ -37,7 +37,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
 
         //the next encoded sequence will exceed the line length
         if((totEncodedChars + ENCODED_SIZE) / LINE_LEN > totEncodedChars / LINE_LEN){
-            for(uint j = 0; j < ENCODED_SIZE; j++){
+            for(unsigned int j = 0; j < ENCODED_SIZE; j++){
                 ret += encodedChars.at(j);
                 //the end of the line has been reached
                 if((totEncodedChars + j+1) % LINE_LEN == 0){

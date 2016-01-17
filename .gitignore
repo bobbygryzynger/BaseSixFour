@@ -1,10 +1,2 @@
-*.user
+*.sublime*
 build/*
-
-Makefile
-
-cmake_install.cmake
-
-# Ignore CMake files
-CMakeFiles/
-CMakeCache.txt

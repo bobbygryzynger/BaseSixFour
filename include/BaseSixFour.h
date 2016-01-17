@@ -16,7 +16,7 @@ class BaseSixFour
         } CHARSET;
 
         static const char PAD_CHAR;
-        static const uint LINE_LEN;
+        static const unsigned int LINE_LEN;
         static const std::string LINE_TERM;
 
         static std::string encode(const std::vector<uint8_t> &in);
@@ -25,8 +25,8 @@ class BaseSixFour
         BaseSixFour();
 
     private:
-        static const uint ENCODE_OCTETS = 3;
-        static const uint ENCODED_SIZE = 4;
+        static const unsigned int ENCODE_OCTETS = 3;
+        static const unsigned int ENCODED_SIZE = 4;
 };
 
 #endif // BASESSIXFOUR_H
