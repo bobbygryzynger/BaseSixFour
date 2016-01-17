@@ -16,7 +16,7 @@ class BaseSixFour
         } CHARSET;
 
         static const char PAD_CHAR;
-        static const unsigned int LINE_LEN;
+        static const unsigned int MAX_LINE_LEN;
         static const std::string LINE_TERM;
 
         static std::string encode(const std::vector<uint8_t> &in);
