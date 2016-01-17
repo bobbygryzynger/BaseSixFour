@@ -1,13 +1,25 @@
 #include "BaseSixFour.h"
 
-const std::string BaseSixFour::CHARSET::MIME =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                                "abcdefghijklmnopqrstuvwxyz"
-                                                "0123456789+/";
-const char BaseSixFour::PAD_CHAR = '=';
-const unsigned int BaseSixFour::MAX_LINE_LEN = 76;
-const std::string BaseSixFour::LINE_TERM = "\r\n";
+//const std::string BaseSixFour::_var._charset =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+//                                                "abcdefghijklmnopqrstuvwxyz"
+//                                                "0123456789+/";
+//const char BaseSixFour::_var._padchar = '=';
+//const unsigned int BaseSixFour::_var._maxlen = 76;
+//const std::string BaseSixFour::_var._lineterm = "\r\n";
 
-std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
+char BaseSixFour::MIME::_padchar = '=';
+std::string BaseSixFour::MIME::_lineterm = "\r\n";
+unsigned int BaseSixFour::MIME::_maxlen = 76;
+std::string BaseSixFour::MIME::_charset =   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                            "abcdefghijklmnopqrstuvwxyz"
+                                            "0123456789+/";
+
+
+BaseSixFour::BaseSixFour(BaseSixFour::Variant var){
+    this->_var = var;
+}
+
+std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
 
     using namespace std;
 
@@ -40,7 +52,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
             inOcts[2] = 0;
             // there will only be three significant encoded charaters
             // add a padding character to ensure length = 4
-            encodedChars = encodeOctets(&inOcts[0]).substr(0, 3) + PAD_CHAR;
+            encodedChars = encodeOctets(&inOcts[0]).substr(0, 3) + _var._padchar;
         }
         // there is only one remaining octet
         else{
@@ -49,19 +61,19 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
             inOcts[2] = 0;
             // there will only be two significant encoded charaters
             // add two padding characters to ensure length = 4
-            encodedChars = encodeOctets(&inOcts[0]).substr(0, 2) + PAD_CHAR + PAD_CHAR;
+            encodedChars = encodeOctets(&inOcts[0]).substr(0, 2) + _var._padchar + _var._padchar;
         }
 
         // appending the next encoded sequence will exceed the line length
-        if((totEncodedChars + ENCODED_SIZE) / MAX_LINE_LEN > totEncodedChars / MAX_LINE_LEN){
+        if((totEncodedChars + ENCODED_SIZE) / _var._maxlen > totEncodedChars / _var._maxlen){
             // look for where the line should end
             for(unsigned int j = 0; j < ENCODED_SIZE; j++){
                 //  append single character
                 ret += encodedChars.at(j);
                 // the end of the line has been reached
-                if((totEncodedChars + j+1) % MAX_LINE_LEN == 0){
+                if((totEncodedChars + j+1) % _var._maxlen == 0){
                     // add the line terminating characters
-                    ret += LINE_TERM;
+                    ret += _var._lineterm;
                 }
             }
         }
@@ -85,31 +97,27 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
  * @return a string of four Base64 encoded characters
  */
 
-std::string BaseSixFour::encodeOctets(uint8_t *in){
+std::string BaseSixFour::encodeOctets(uint8_t *in) const{
 
     using namespace std;
 
     string ret = "";
 
     // byte 0: shift off two LSBs (least significant bit)
-    ret += CHARSET::MIME.at(in[0] >> 2);
+    ret += _var._charset.at(in[0] >> 2);
     // byte 0: mask first 2 LSBs and shift off 4 MSBs (most significant bit)
     //  leaving only two original bits
     // byte 1: shift off 4 LSBs
     // add results of operations on byte 0 and byte 1
-    ret += CHARSET::MIME.at(((in[0] & 0x03) << 4) + (in[1] >> 4));
+    ret += _var._charset.at(((in[0] & 0x03) << 4) + (in[1] >> 4));
     // byte 1: shift off 2 MSBs
     // byte 2: shift off 6 LSBs
     // add results of operations on byte 1 and byte 2
     // mask for 6 LSBs
-    ret += CHARSET::MIME.at(((in[1] << 2) + (in[2] >> 6)) & 0x3f);
+    ret += _var._charset.at(((in[1] << 2) + (in[2] >> 6)) & 0x3f);
     //byte 2: mask for 6 LSBs
-    ret += CHARSET::MIME.at(in[2] & 0x3f);
+    ret += _var._charset.at(in[2] & 0x3f);
 
     return ret;
-
-}
-
-BaseSixFour::BaseSixFour(){
 
 }
