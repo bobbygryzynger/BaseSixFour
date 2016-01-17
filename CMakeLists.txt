@@ -12,11 +12,6 @@ add_definitions(-DDATA_DIR="${TEST_DATA_DIR}")
 
 file(GLOB SOURCES ${SOURCES_DIR}/*.cpp ${TESTS_DIR}/*.cpp)
 
-
-# set(SOURCES "src/BaseSixFour.cpp" 
-#             "tests/BaseSixFourTests.cpp" 
-#             "tests/main.cpp")
-
 add_executable(TestBaseSixFour ${SOURCES})
 
 find_library(GTEST gtest)
