@@ -22,17 +22,17 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
             inPtr[0] = in.data()[i];
             inPtr[1] = in.data()[i+1];
             inPtr[2] = in.data()[i+2];
-            encodedChars = encodeOctetSet(inPtr);
+            encodedChars = encodeOctets(inPtr);
         }else if(i+ENCODE_OCTETS-2 < in.size()){
             inPtr[0] = in.data()[i];
             inPtr[1] = in.data()[i+1];
             inPtr[2] = 0;
-            encodedChars = encodeOctetSet(inPtr).substr(0, 3) + PAD_CHAR;
+            encodedChars = encodeOctets(inPtr).substr(0, 3) + PAD_CHAR;
         }else{
             inPtr[0] = in.data()[i];
             inPtr[1] = 0;
             inPtr[2] = 0;
-            encodedChars = encodeOctetSet(inPtr).substr(0, 2) + PAD_CHAR + PAD_CHAR;
+            encodedChars = encodeOctets(inPtr).substr(0, 2) + PAD_CHAR + PAD_CHAR;
         }
 
         //the next encoded sequence will exceed the line length
@@ -57,14 +57,14 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
     return ret;
 }
 /**
- * @brief BaseSixFour::encodeOctetSet
- * @param in a pointer to no more than three uint8_t bytes,
- *          any additional bytes will be ignored. Fewer than
- *          three bytes will throw an out-of-range expection
+ * @brief BaseSixFour::encodeOctets
+ * @param in a pointer to no more than three uint8_t octets,
+ *          any additional octets will be ignored. Fewer than
+ *          three octets will throw an out-of-range expection
  * @return a string of four Base64 encoded characters
  */
 
-std::string BaseSixFour::encodeOctetSet(uint8_t *in){
+std::string BaseSixFour::encodeOctets(uint8_t *in){
 
     using namespace std;
 
