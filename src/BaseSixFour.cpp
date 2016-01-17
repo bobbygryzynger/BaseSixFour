@@ -56,28 +56,34 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
 
     return ret;
 }
+/**
+ * @brief BaseSixFour::encodeOctetSet
+ * @param in a pointer to no more than three uint8_t bytes,
+ *          any additional bytes will be ignored. Fewer than
+ *          three bytes will throw an out-of-range expection
+ * @return a string of four Base64 encoded characters
+ */
 
 std::string BaseSixFour::encodeOctetSet(uint8_t *in){
 
     using namespace std;
 
     string ret = "";
-    int charsetIdx = 0;
 
-    for(size_t i = 0; i < ENCODED_SIZE; i++){
-
-        if(i == 0){
-            charsetIdx = (in[i] >> 2) & 0x3f;
-        }else if(i == 1){
-            charsetIdx = ((in[i-1] & 0x03) << 4) + (in[i] >> 4);
-        }else if(i == 2){
-            charsetIdx = ((in[i-1] << 2) + (in[i] >> 6)) & 0x3f;
-        }else{
-            charsetIdx = in[i-1] & 0x3f;
-        }
-
-        ret += CHARSET::MIME.at(charsetIdx);
-    }
+    // byte 0: shift off two LSBs (least significant bit)
+    ret += CHARSET::MIME.at(in[0] >> 2);
+    // byte 0: mask first 2 LSBs and shift off 4 MSBs (most significant bit)
+    //  leaving only two original bits
+    // byte 1: shift off 4 LSBs
+    // add results of operations on byte 0 and byte 1
+    ret += CHARSET::MIME.at(((in[0] & 0x03) << 4) + (in[1] >> 4));
+    // byte 1: shift off 2 MSBs
+    // byte 2: shift off 6 LSBs
+    // add results of operations on byte 1 and byte 2
+    // mask for 6 LSBs
+    ret += CHARSET::MIME.at(((in[1] << 2) + (in[2] >> 6)) & 0x3f);
+    //byte 2: mask for 6 LSBs
+    ret += CHARSET::MIME.at(in[2] & 0x3f);
 
     return ret;
 
