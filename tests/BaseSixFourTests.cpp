@@ -2,7 +2,9 @@
 #include "BaseSixFour.h"
 #include <fstream>
 
-#define DATA_DIR ""
+#ifndef DATA_DIR
+    #define DATA_DIR "data"
+#endif
 
 class BaseSixFourTests : public ::testing::Test {
 
@@ -79,7 +81,7 @@ TEST_F(BaseSixFourTests, EncodeFile){
         "qVKkm5TqTm3Kc5NylJtttts//9k=";
 
     //read image from file
-    std::ifstream ifs(DATA_DIR + "/icon.jpg", std::ios::binary);
+    std::ifstream ifs(DATA_DIR"/icon.jpg", std::ios::binary);
     ifs.seekg(0, std::ios::end);
     std::vector<char> charVec(ifs.tellg());
     ifs.seekg(0, std::ios::beg);
