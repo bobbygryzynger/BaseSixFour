@@ -81,7 +81,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
  * @brief BaseSixFour::encodeOctets
  * @param in a pointer to no more than three uint8_t octets,
  *          any additional octets will be ignored. Fewer than
- *          three octets will throw an out-of-range expection
+ *          three octets causes undefined behavior
  * @return a string of four Base64 encoded characters
  */
 
