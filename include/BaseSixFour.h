@@ -27,7 +27,7 @@ class BaseSixFour
         static const unsigned int ENCODE_OCTETS = 3;
         static const unsigned int ENCODED_SIZE = 4;
 
-        static std::string encodeOctetSet(uint8_t *in);
+        static std::string encodeOctets(uint8_t *in);
 };
 
 #endif // BASESSIXFOUR_H
