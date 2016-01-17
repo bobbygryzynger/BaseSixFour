@@ -18,7 +18,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
     size_t totEncodedChars = 0;
 
     // the container for the three octets to encode
-    uint8_t* inPtr = new uint8_t[ENCODE_OCTETS];
+    uint8_t inOcts[] = {0,0,0};
 
     // the current set of three octets
     // encoded as four Base64 characters
@@ -28,28 +28,28 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
 
         // the end of the input data has not been reached
         if(i+ENCODE_OCTETS-1 < in.size()){
-            inPtr[0] = in.data()[i];
-            inPtr[1] = in.data()[i+1];
-            inPtr[2] = in.data()[i+2];
-            encodedChars = encodeOctets(inPtr);
+            inOcts[0] = in.data()[i];
+            inOcts[1] = in.data()[i+1];
+            inOcts[2] = in.data()[i+2];
+            encodedChars = encodeOctets(&inOcts[0]);
         }
         // there are only two remaining octets
         else if(i+ENCODE_OCTETS-2 < in.size()){
-            inPtr[0] = in.data()[i];
-            inPtr[1] = in.data()[i+1];
-            inPtr[2] = 0;
+            inOcts[0] = in.data()[i];
+            inOcts[1] = in.data()[i+1];
+            inOcts[2] = 0;
             // there will only be three significant encoded charaters
             // add a padding character to ensure length = 4
-            encodedChars = encodeOctets(inPtr).substr(0, 3) + PAD_CHAR;
+            encodedChars = encodeOctets(&inOcts[0]).substr(0, 3) + PAD_CHAR;
         }
         // there is only one remaining octet
         else{
-            inPtr[0] = in.data()[i];
-            inPtr[1] = 0;
-            inPtr[2] = 0;
+            inOcts[0] = in.data()[i];
+            inOcts[1] = 0;
+            inOcts[2] = 0;
             // there will only be two significant encoded charaters
             // add two padding characters to ensure length = 4
-            encodedChars = encodeOctets(inPtr).substr(0, 2) + PAD_CHAR + PAD_CHAR;
+            encodedChars = encodeOctets(&inOcts[0]).substr(0, 2) + PAD_CHAR + PAD_CHAR;
         }
 
         // appending the next encoded sequence will exceed the line length
@@ -74,10 +74,6 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in){
         // update count
         totEncodedChars += ENCODED_SIZE;
     }
-
-    //clean up
-    inPtr = NULL;
-    delete inPtr;
 
     return ret;
 }
