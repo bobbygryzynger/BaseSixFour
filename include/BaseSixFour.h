@@ -20,9 +20,8 @@ class BaseSixFour{
 
         static const Variant MIME;
 
-        std::string encode(const std::vector<uint8_t> &in) const;
-
         BaseSixFour(const Variant &var = BaseSixFour::MIME, bool enforceLineLen = true);
+        std::string encode(const std::vector<uint8_t> &in) const;
 
     private:
 
