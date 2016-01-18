@@ -6,38 +6,34 @@
 #include <inttypes.h>
 #include <vector>
 
-typedef struct Variant{
-        std::string _charset;
-        char _padchar;
-        unsigned int _maxlen;
-        std::string _lineterm;
-}Variant;
-
 class BaseSixFour{
 
     public:
 
-//        static const struct CHARSET {
-//            static const std::string MIME;
-//        } CHARSET;
+        typedef const struct{
+            public:
+                std::string _charset;
+                char _padChar;
+                size_t _maxLineLen;
+                std::string _lineTerminus;
+        }Variant;
 
-        static Variant MIME;
-
-//        static const char PAD_CHAR;
-//        static const unsigned int MAX_LINE_LEN;
-//        static const std::string LINE_TERM;
+        static const Variant MIME;
 
         std::string encode(const std::vector<uint8_t> &in) const;
 
-        BaseSixFour(Variant var = BaseSixFour::MIME);
+        BaseSixFour(Variant var = BaseSixFour::MIME, bool enforceLineLen = true);
 
     private:
 
-        friend class Variant;
-        Variant _var;
-
         static const unsigned int ENCODE_OCTETS = 3;
         static const unsigned int ENCODED_SIZE = 4;
+
+        std::string _charset;
+        char _padChar;
+        size_t _maxLineLen;
+        std::string _lineTerminus;
+        bool _enforceMaxLen;
 
         std::string encodeOctets(uint8_t *in) const;
 };

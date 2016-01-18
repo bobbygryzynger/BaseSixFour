@@ -23,7 +23,9 @@ class BaseSixFourTests : public ::testing::Test {
         }
 };
 
-TEST_F(BaseSixFourTests, EncodeText){
+TEST_F(BaseSixFourTests, MIME_EncodeText){
+
+    BaseSixFour b64(BaseSixFour::MIME, true);
 
     //from: https://en.wikipedia.org/wiki/Base64#Examples
     std::string in =
@@ -45,10 +47,12 @@ TEST_F(BaseSixFourTests, EncodeText){
         inVec.push_back(in.at(i));
     }
 
-    ASSERT_STREQ(out.c_str(), BaseSixFour::encode(inVec).c_str());
+    ASSERT_STREQ(out.c_str(), b64.encode(inVec).c_str());
 }
 
-TEST_F(BaseSixFourTests, EncodeFile){
+TEST_F(BaseSixFourTests, MIME_EncodeFile){
+
+    BaseSixFour b64(BaseSixFour::MIME, true);
 
     std::string encoded;
     std::string expected =
@@ -87,7 +91,7 @@ TEST_F(BaseSixFourTests, EncodeFile){
     ifs.seekg(0, std::ios::beg);
     ifs.read(&charVec[0], charVec.size());
 
-    encoded =  BaseSixFour::encode(std::vector<uint8_t>(charVec.begin(), charVec.end()));
+    encoded =  b64.encode(std::vector<uint8_t>(charVec.begin(), charVec.end()));
 
     ASSERT_STREQ(expected.c_str(), encoded.c_str());
 }
