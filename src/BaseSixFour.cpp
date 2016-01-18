@@ -108,11 +108,11 @@ std::string BaseSixFour::encodeOctets(uint8_t *in) const{
 
     // byte 0: shift off two LSBs (least significant bit)
     ret += _charset.at(in[0] >> 2);
-    // byte 0: mask first 2 LSBs and shift off 4 MSBs (most significant bit)
-    //  leaving only two original bits
+    // byte 0: shift off 4 MSBs (most significant bit)
+    //  and mask for 6 LSBs
     // byte 1: shift off 4 LSBs
     // add results of operations on byte 0 and byte 1
-    ret += _charset.at(((in[0] & 0x03) << 4) + (in[1] >> 4));
+    ret += _charset.at(((in[0] << 4) & 0x3f) + (in[1] >> 4));
     // byte 1: shift off 2 MSBs
     // byte 2: shift off 6 LSBs
     // add results of operations on byte 1 and byte 2
