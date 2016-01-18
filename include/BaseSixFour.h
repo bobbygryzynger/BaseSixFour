@@ -1,5 +1,5 @@
-#ifndef BASESSIXFOUR_H
-#define BASESSIXFOUR_H
+#ifndef BASESIXFOUR_H
+#define BASESIXFOUR_H
 
 #include <string>
 #include <iostream>
@@ -37,4 +37,4 @@ class BaseSixFour{
         std::string encodeOctets(const uint8_t *in) const;
 };
 
-#endif // BASESSIXFOUR_H
+#endif // BASESIXFOUR_H
