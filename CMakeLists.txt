@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(BaseSixFour)
 
 # set project variables
@@ -22,6 +22,10 @@ file(GLOB SOURCES ${SOURCES_DIR}/*.cpp ${TESTS_DIR}/*.cpp)
 
 # set targets
 add_executable(TestBaseSixFour ${SOURCES} ${HEADERS})
+
+# add features support
+set_property(TARGET TestBaseSixFour PROPERTY CXX_STANDARD 11)
+set_property(TARGET TestBaseSixFour PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # find libraries
 find_library(GTEST gtest)
