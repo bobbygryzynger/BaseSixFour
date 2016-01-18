@@ -23,8 +23,8 @@ class BaseSixFour{
 
         BaseSixFour(const Variant &var = BaseSixFour::MIME, bool enforceLineLen = true);
         std::string encode(const std::vector<uint8_t> &in) const;
-        std::string sanitize(std::string &in) const;
-        std::vector<uint8_t> decode(const std::string &in);
+        std::string sanitize(const std::string &in) const;
+        std::vector<uint8_t> decode(const std::string &in, bool sanitizeInput = true) const;
 
     private:
 
@@ -38,7 +38,7 @@ class BaseSixFour{
         bool _enforceMaxLen;
 
         std::string encodeOctets(const uint8_t *in) const;
-        uint8_t* decodeCharacters(const std::string &in) const;
+        uint8_t* decodeCharacters(const char *in) const;
 };
 
 #endif // BASESIXFOUR_H
