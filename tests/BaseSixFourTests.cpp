@@ -34,7 +34,7 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
         "in the continued and indefatigable generation of knowledge, exceeds the short "
         "vehemence of any carnal pleasure.";
 
-    std::string out =
+    std::string expected =
         "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz\r\n"
         "IHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg\r\n"
         "dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlu\r\n"
@@ -47,7 +47,7 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
         inVec.push_back(in.at(i));
     }
 
-    ASSERT_STREQ(out.c_str(), b64.encode(inVec).c_str());
+    ASSERT_STREQ(expected.c_str(), b64.encode(inVec).c_str());
 }
 
 TEST_F(BaseSixFourTests, MIME_EncodeFile){
