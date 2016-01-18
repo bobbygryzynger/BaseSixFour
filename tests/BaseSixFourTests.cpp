@@ -41,13 +41,7 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
         "dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo\r\n"
         "ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
 
-
-    std::vector<uint8_t> inVec;
-    for(size_t i = 0; i < in.length(); i++){
-        inVec.push_back(in.at(i));
-    }
-
-    ASSERT_STREQ(expected.c_str(), b64.encode(inVec).c_str());
+    ASSERT_STREQ(expected.c_str(), b64.encode(std::vector<uint8_t>(in.begin(), in.end())).c_str());
 }
 
 TEST_F(BaseSixFourTests, MIME_EncodeFile){
