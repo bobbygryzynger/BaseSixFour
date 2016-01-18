@@ -81,7 +81,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
         }
         // maximium line length is not enfored or
         // the maximum line length will not be exceed by the current characters
-        // append all of the encoded charaters
+        // append all of the encoded characters
         else{
             ret += encodedChars;
         }
@@ -97,8 +97,8 @@ std::string BaseSixFour::sanitize(std::string &in) const{
 
     using namespace std;
 
-    regex b64Exp("[^" + _charset + _padChar + "]");
-    return regex_replace(in, b64Exp, "");
+    regex notB64("[^" + _charset + _padChar + "]");
+    return regex_replace(in, notB64, "");
 
 }
 
@@ -161,7 +161,8 @@ uint8_t* BaseSixFour::decodeCharacters(const std::string &in) const{
 
     ret[0] = (encoded[0] << 2) + (encoded[1] & 0x03);
     ret[1] = (encoded[1] << 6) + (encoded[2] >> 6);
-    ret[2] = (encoded[2] << 6) + (encoded[3]); //unnecessary to mask if this is a base64 char
+    ret[2] = (encoded[2] << 6) + (encoded[3]); // unnecessary to mask if this is a base64 char
+                                               // the two MSBs will be zero
 
     return ret;
 
