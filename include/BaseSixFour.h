@@ -22,7 +22,7 @@ class BaseSixFour{
 
         std::string encode(const std::vector<uint8_t> &in) const;
 
-        BaseSixFour(Variant var = BaseSixFour::MIME, bool enforceLineLen = true);
+        BaseSixFour(const Variant &var = BaseSixFour::MIME, bool enforceLineLen = true);
 
     private:
 
@@ -35,7 +35,7 @@ class BaseSixFour{
         std::string _lineTerminus;
         bool _enforceMaxLen;
 
-        std::string encodeOctets(uint8_t *in) const;
+        std::string encodeOctets(const uint8_t *in) const;
 };
 
 #endif // BASESSIXFOUR_H

@@ -10,7 +10,7 @@ const BaseSixFour::Variant BaseSixFour::MIME = {
 };
 
 
-BaseSixFour::BaseSixFour(BaseSixFour::Variant var, bool enforceLineLen){
+BaseSixFour::BaseSixFour(const Variant &var, bool enforceLineLen){
 
     this->_charset = var._charset;
     this->_padChar = var._padChar;
@@ -50,7 +50,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
             inOcts[0] = in.data()[i];
             inOcts[1] = in.data()[i+1];
             inOcts[2] = 0;
-            // there will only be three significant encoded charaters
+            // there will only be three significant encoded characters
             // add a padding character to ensure length = 4
             encodedChars = encodeOctets(&inOcts[0]).substr(0, 3) + _padChar;
         }
@@ -59,7 +59,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
             inOcts[0] = in.data()[i];
             inOcts[1] = 0;
             inOcts[2] = 0;
-            // there will only be two significant encoded charaters
+            // there will only be two significant encoded characters
             // add two padding characters to ensure length = 4
             encodedChars = encodeOctets(&inOcts[0]).substr(0, 2) + _padChar + _padChar;
         }
@@ -100,7 +100,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
  * @return a string of four Base64 encoded characters
  */
 
-std::string BaseSixFour::encodeOctets(uint8_t *in) const{
+std::string BaseSixFour::encodeOctets(const uint8_t *in) const{
 
     using namespace std;
 
