@@ -5,6 +5,7 @@
 #include <iostream>
 #include <inttypes.h>
 #include <vector>
+#include <regex>
 
 class BaseSixFour{
 
@@ -22,11 +23,13 @@ class BaseSixFour{
 
         BaseSixFour(const Variant &var = BaseSixFour::MIME, bool enforceLineLen = true);
         std::string encode(const std::vector<uint8_t> &in) const;
+        std::string sanitize(std::string &in) const;
+        std::vector<uint8_t> decode(const std::string &in);
 
     private:
 
-        static const unsigned int ENCODE_OCTETS = 3;
-        static const unsigned int ENCODED_SIZE = 4;
+        static const unsigned int DECODED_OCTETS = 3;
+        static const unsigned int ENCODED_CHARS = 4;
 
         std::string _charset;
         char _padChar;
@@ -35,6 +38,7 @@ class BaseSixFour{
         bool _enforceMaxLen;
 
         std::string encodeOctets(const uint8_t *in) const;
+        uint8_t* decodeCharacters(const std::string &in) const;
 };
 
 #endif // BASESIXFOUR_H

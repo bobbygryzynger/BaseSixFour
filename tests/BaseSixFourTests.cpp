@@ -95,3 +95,31 @@ TEST_F(BaseSixFourTests, MIME_EncodeFile){
 
     ASSERT_STREQ(expected.c_str(), encoded.c_str());
 }
+
+TEST_F(BaseSixFourTests, MIME_SanitizeDecodeInput){
+
+    BaseSixFour b64(BaseSixFour::MIME, true);
+
+    std::string input =
+            "WcYSaqVKUMXQjU9+GFzCnThj8JCUqnLhsVSiq1ZJVp/86v0pPCzhbwT+kH4q+FfBXE8OL+GODOKK\r\n"
+            "2WZVnCq4aviKNOphMJjsRw9mdfCVJ4evnvCGMxeJ4S4gr04YRV88yTMKssuyuc5Zbhf/0P4VfCPx\r\n"
+            "x+LXgTQb7wx4U8d65pGg6hbS2h05JYbqLTop2vpJ38PyX0F1P4YuZ59Su7qa98OzaVeS3jx3sk7X\r\n"
+            "dtazwfH514f8GcQ5jh82zjh7L8bmOHqwrLFShUozxM6aw8aazKOHqUaebUqdPC0KVOhmkcZQhQjP\r\n"
+            "DxpKjVqwn/R/hn9L36S/g7wZnHh74b+MfF/DPBudYDE5bLIqWIweY4fI8PjZ5xWxlTgqtnGEzHGe\r\n"
+            "H2YYvF57meY4rNeBcTw5mmIzWrQzatjJ5lgcvxeH8rd3kd5JHaSR2Z3d2LO7sSWd2YlmZiSWYkkk\r\n"
+            "kknOa+vjGMYqMUoxilGMYpKMYpWSSVkklZJJWS0Vj+dKtWrXq1K9epUrVq1SdWtWqzlUq1atSTnU\r\n"
+            "qVKkm5TqTm3Kc5NylJtttts//9k=";
+
+    std::string expected =
+            "WcYSaqVKUMXQjU9+GFzCnThj8JCUqnLhsVSiq1ZJVp/86v0pPCzhbwT+kH4q+FfBXE8OL+GODOKK"
+            "2WZVnCq4aviKNOphMJjsRw9mdfCVJ4evnvCGMxeJ4S4gr04YRV88yTMKssuyuc5Zbhf/0P4VfCPx"
+            "x+LXgTQb7wx4U8d65pGg6hbS2h05JYbqLTop2vpJ38PyX0F1P4YuZ59Su7qa98OzaVeS3jx3sk7X"
+            "dtazwfH514f8GcQ5jh82zjh7L8bmOHqwrLFShUozxM6aw8aazKOHqUaebUqdPC0KVOhmkcZQhQjP"
+            "DxpKjVqwn/R/hn9L36S/g7wZnHh74b+MfF/DPBudYDE5bLIqWIweY4fI8PjZ5xWxlTgqtnGEzHGe"
+            "H2YYvF57meY4rNeBcTw5mmIzWrQzatjJ5lgcvxeH8rd3kd5JHaSR2Z3d2LO7sSWd2YlmZiSWYkkk"
+            "kknOa+vjGMYqMUoxilGMYpKMYpWSSVkklZJJWS0Vj+dKtWrXq1K9epUrVq1SdWtWqzlUq1atSTnU"
+            "qVKkm5TqTm3Kc5NylJtttts//9k=";
+
+   ASSERT_STREQ(expected.c_str(), b64.sanitize(input).c_str());
+
+}

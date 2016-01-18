@@ -36,17 +36,17 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
     // encoded as four Base64 characters
     string encodedChars = "";
 
-    for(size_t i = 0; i < in.size(); i+=ENCODE_OCTETS){
+    for(size_t i = 0; i < in.size(); i+=DECODED_OCTETS){
 
         // the end of the input data has not been reached
-        if(i+ENCODE_OCTETS-1 < in.size()){
+        if(i+DECODED_OCTETS-1 < in.size()){
             inOcts[0] = in.data()[i];
             inOcts[1] = in.data()[i+1];
             inOcts[2] = in.data()[i+2];
             encodedChars = encodeOctets(&inOcts[0]);
         }
         // there are only two remaining octets
-        else if(i+ENCODE_OCTETS-2 < in.size()){
+        else if(i+DECODED_OCTETS-2 < in.size()){
             inOcts[0] = in.data()[i];
             inOcts[1] = in.data()[i+1];
             inOcts[2] = 0;
@@ -67,9 +67,9 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
         // if we're enforcing the maximum line length and
         // appending the next encoded sequence will exceed the line length
         if(_enforceMaxLen &&
-           (totEncodedChars + ENCODED_SIZE) / _maxLineLen > totEncodedChars / _maxLineLen){
+           (totEncodedChars + ENCODED_CHARS) / _maxLineLen > totEncodedChars / _maxLineLen){
             // look for where the line should end
-            for(unsigned int j = 0; j < ENCODED_SIZE; j++){
+            for(unsigned int j = 0; j < ENCODED_CHARS; j++){
                 //  append single character
                 ret += encodedChars.at(j);
                 // the end of the line has been reached
@@ -87,11 +87,32 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
         }
 
         // update count
-        totEncodedChars += ENCODED_SIZE;
+        totEncodedChars += ENCODED_CHARS;
     }
 
     return ret;
 }
+
+std::string BaseSixFour::sanitize(std::string &in) const{
+
+    using namespace std;
+
+    regex b64Exp("[^" + _charset + _padChar + "]");
+    return regex_replace(in, b64Exp, "");
+
+}
+
+std::vector<uint8_t> BaseSixFour::decode(const std::string &in){
+
+    using namespace std;
+
+    // the decoded data to return
+    vector<uint8_t> ret;
+
+    return ret;
+
+}
+
 /**
  * @brief BaseSixFour::encodeOctets
  * @param in a pointer to no more than three uint8_t octets,
@@ -120,6 +141,27 @@ std::string BaseSixFour::encodeOctets(const uint8_t *in) const{
     ret += _charset.at(((in[1] << 2) + (in[2] >> 6)) & 0x3f);
     // byte 2: mask for 6 LSBs
     ret += _charset.at(in[2] & 0x3f);
+
+    return ret;
+
+}
+
+uint8_t* BaseSixFour::decodeCharacters(const std::string &in) const{
+
+    // the decoded data
+    uint8_t* ret = new uint8_t[DECODED_OCTETS];
+
+    // with this approach, in must be sanitized for non-base64 chars
+    char encoded[] = {
+        _charset.data()[_charset.find(in.at(0))],
+        _charset.data()[_charset.find(in.at(1))],
+        _charset.data()[_charset.find(in.at(2))],
+        _charset.data()[_charset.find(in.at(3))]
+    };
+
+    ret[0] = (encoded[0] << 2) + (encoded[1] & 0x03);
+    ret[1] = (encoded[1] << 6) + (encoded[2] >> 6);
+    ret[2] = (encoded[2] << 6) + (encoded[3]); //unnecessary to mask if this is a base64 char
 
     return ret;
 
