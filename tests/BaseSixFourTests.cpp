@@ -27,6 +27,14 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
 
     BaseSixFour b64(BaseSixFour::MIME, true);
 
+    std::string inNoPad =
+            "What is a country? A country is a piece of land surrounded on all "
+            "sides by boundaries, usually unnatural.";
+
+    std::string expectedNoPad =
+            "V2hhdCBpcyBhIGNvdW50cnk/IEEgY291bnRyeSBpcyBhIHBpZWNlIG9mIGxhbmQgc3Vycm91bmRl\r\n"
+            "ZCBvbiBhbGwgc2lkZXMgYnkgYm91bmRhcmllcywgdXN1YWxseSB1bm5hdHVyYWwu";
+
     //from: https://en.wikipedia.org/wiki/Base64#Examples
     std::string inSglPad =
         "Man is distinguished, not only by his reason, but by this singular passion from "
@@ -53,7 +61,7 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
             "dCBseWluZw==";
 
 
-
+    ASSERT_STREQ(expectedNoPad.c_str(), b64.encode(std::vector<uint8_t>(inNoPad.begin(), inNoPad.end())).c_str());
     ASSERT_STREQ(expectedSglPad.c_str(), b64.encode(std::vector<uint8_t>(inSglPad.begin(), inSglPad.end())).c_str());
     ASSERT_STREQ(expectedDblPad.c_str(), b64.encode(std::vector<uint8_t>(inDblPad.begin(), inDblPad.end())).c_str());
 
@@ -64,6 +72,15 @@ TEST_F(BaseSixFourTests, MIME_DecodeText){
 
     BaseSixFour b64(BaseSixFour::MIME, true);
 
+
+    std::string inNoPad =
+            "V2hhdCBpcyBhIGNvdW50cnk/IEEgY291bnRyeSBpcyBhIHBpZWNlIG9mIGxhbmQgc3Vycm91bmRl\r\n"
+            "ZCBvbiBhbGwgc2lkZXMgYnkgYm91bmRhcmllcywgdXN1YWxseSB1bm5hdHVyYWwu";
+
+    std::string expectedNoPad =
+            "What is a country? A country is a piece of land surrounded on all "
+            "sides by boundaries, usually unnatural.";
+
     //from: https://en.wikipedia.org/wiki/Base64#Examples
     std::string inSglPad =
         "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz\r\n"
@@ -89,6 +106,7 @@ TEST_F(BaseSixFourTests, MIME_DecodeText){
             "Cried so much that his face was wet / "
             "Then I knew he was not lying";
 
+    ASSERT_EQ(std::vector<uint8_t> (expectedNoPad.begin(), expectedSglPad.end()), b64.decode(inNoPad));
     ASSERT_EQ(std::vector<uint8_t> (expectedSglPad.begin(), expectedSglPad.end()), b64.decode(inSglPad));
     ASSERT_EQ(std::vector<uint8_t> (expectedDblPad.begin(), expectedDblPad.end()), b64.decode(inDblPad));
 
