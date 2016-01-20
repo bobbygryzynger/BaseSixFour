@@ -197,6 +197,7 @@ bool BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const
        encodedIdx[2] != string::npos &&
        encodedIdx[3] != string::npos){
         // all operations assume bits 7 & 8 are not significant
+        // and are not present
         ret[0] = (encodedIdx[0] << 2) + (encodedIdx[1] >> 4);
         ret[1] = (encodedIdx[1] << 4) + (encodedIdx[2] >> 2);
         ret[2] = (encodedIdx[2] << 6) + (encodedIdx[3]);
