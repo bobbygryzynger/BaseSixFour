@@ -30,7 +30,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
     size_t totEncodedChars = 0;
 
     // the container for the three octets to encode
-    uint8_t inOcts[] = {0, 0, 0};
+    uint8_t inOcts[3];
 
     // the current set of three octets
     // encoded as four Base64 characters
@@ -43,7 +43,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
             inOcts[0] = in.data()[i];
             inOcts[1] = in.data()[i+1];
             inOcts[2] = in.data()[i+2];
-            encodedChars = encodeOctets(&inOcts[0]);
+            encodedChars = encodeOctets(inOcts);
         }
         // there are only two remaining octets
         else if(i+DECODED_OCTETS-2 < in.size()){
@@ -52,7 +52,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
             inOcts[2] = 0;
             // there will only be three significant encoded characters
             // add a padding character to ensure length = 4
-            encodedChars = encodeOctets(&inOcts[0]).substr(0, 3) + _padChar;
+            encodedChars = encodeOctets(inOcts).substr(0, 3) + _padChar;
         }
         // there is only one remaining octet
         else{
@@ -61,7 +61,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
             inOcts[2] = 0;
             // there will only be two significant encoded characters
             // add two padding characters to ensure length = 4
-            encodedChars = encodeOctets(&inOcts[0]).substr(0, 2) + _padChar + _padChar;
+            encodedChars = encodeOctets(inOcts).substr(0, 2) + _padChar + _padChar;
         }
 
         // if we're enforcing the maximum line length and
@@ -112,51 +112,35 @@ std::vector<uint8_t> BaseSixFour::decode(const std::string &in, bool sanitizeInp
     vector<uint8_t> ret;
     ret.reserve(encoded.length() * (DECODED_OCTETS/ENCODED_CHARS));
 
-    if(encoded.at(encoded.length()-1) == _padChar){
-        encoded.resize(encoded.length()-1);
-        std::cout << encoded << std::endl;
-    }else if (encoded.at(encoded.length()-2) == _padChar){
-        encoded.resize(encoded.length()-2);
-        std::cout << encoded << std::endl;
-    }
+    size_t padPos = encoded.find(_padChar, encoded.length()-2);
+    size_t encodedLen = padPos != string::npos ? padPos : encoded.length();
 
-    uint8_t *decoded = NULL;
+    char encodedChs[4];
+    uint8_t decodedBytes[3];
 
-    char encodedChs[] = {'0', '0', '0', '0'};
+    for(size_t i = 0; i < encodedLen; i+=ENCODED_CHARS){
 
-    for(size_t i = 0; i < encoded.length(); i+=ENCODED_CHARS){
-
-        if(i+ENCODED_CHARS-1 < encoded.length()){
+        if(i+ENCODED_CHARS-1 < encodedLen){
             encodedChs[0] = encoded.data()[i];
             encodedChs[1] = encoded.data()[i+1];
             encodedChs[2] = encoded.data()[i+2];
             encodedChs[3] = encoded.data()[i+3];
-            decoded = decodeCharacters(&encodedChs[0]);
-            ret.push_back(decoded[0]);
-            ret.push_back(decoded[1]);
-            ret.push_back(decoded[2]);
-
+            decodeCharacters(encodedChs, decodedBytes);
+            ret.insert(ret.end(), decodedBytes, decodedBytes+3);
+        }else if(i+ENCODED_CHARS-2 < encodedLen){
+            encodedChs[0] = encoded.data()[i];
+            encodedChs[1] = encoded.data()[i+1];
+            encodedChs[2] = encoded.data()[i+2];
+            decodeCharacters(encodedChs, decodedBytes);
+            ret.insert(ret.end(), decodedBytes, decodedBytes+2);
+        }else{
+            encodedChs[0] = encoded.data()[i];
+            encodedChs[1] = encoded.data()[i+1];
+            decodeCharacters(encodedChs, decodedBytes);
+            ret.insert(ret.end(), decodedBytes, decodedBytes+1);
         }
-//        else if(i+ENCODED_CHARS-2 < encoded.length()){
-//            encodedChs[0] = encoded.data()[i];
-//            encodedChs[1] = encoded.data()[i+1];
-//            encodedChs[2] = encoded.data()[i+2];
-//            encodedChs[3] = 0;
-//            decoded = decodeCharacters(&encodedChs[0]);
-//            ret.push_back(decoded[0]);
-//            ret.push_back(decoded[1]);
-//        }
-
-        //delete decoded;
 
     }
-
-    for(size_t i = 0; i < ret.size(); i++){
-        std::cout << ret.at(i);
-    }
-    std::cout << std::endl;
-
-    //decoded = NULL;
 
     return ret;
 
@@ -170,7 +154,7 @@ std::vector<uint8_t> BaseSixFour::decode(const std::string &in, bool sanitizeInp
  * @return a string of four Base64 encoded characters
  */
 
-std::string BaseSixFour::encodeOctets(const uint8_t *in) const{
+std::string BaseSixFour::encodeOctets(const uint8_t (&in)[3]) const{
 
     using namespace std;
 
@@ -195,12 +179,10 @@ std::string BaseSixFour::encodeOctets(const uint8_t *in) const{
 
 }
 
-uint8_t* BaseSixFour::decodeCharacters(const char *in) const{
+bool BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const{
 
-    // the decoded data
-    uint8_t* ret = new uint8_t[DECODED_OCTETS];
+    using namespace std;
 
-    // with this approach, in must be sanitized for non-base64 chars
     size_t encodedIdx[] = {
         _charset.find(in[0]),
         _charset.find(in[1]),
@@ -208,10 +190,18 @@ uint8_t* BaseSixFour::decodeCharacters(const char *in) const{
         _charset.find(in[3])
     };
 
-    // all operations assume bits 7 & 8 are not significant
-    ret[0] = (encodedIdx[0] << 2) + (encodedIdx[1] >> 4);
-    ret[1] = (encodedIdx[1] << 4) + (encodedIdx[2] >> 2);
-    ret[2] = (encodedIdx[2] << 6) + (encodedIdx[3]);
+    // Base64 characters were found for all
+    // passed characters
+    if(encodedIdx[0] != string::npos &&
+       encodedIdx[1] != string::npos &&
+       encodedIdx[2] != string::npos &&
+       encodedIdx[3] != string::npos){
+        // all operations assume bits 7 & 8 are not significant
+        ret[0] = (encodedIdx[0] << 2) + (encodedIdx[1] >> 4);
+        ret[1] = (encodedIdx[1] << 4) + (encodedIdx[2] >> 2);
+        ret[2] = (encodedIdx[2] << 6) + (encodedIdx[3]);
+        return true;
+    }
 
-    return ret;
+    return false;
 }

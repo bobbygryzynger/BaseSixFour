@@ -30,6 +30,7 @@ class BaseSixFour{
 
         static const unsigned int DECODED_OCTETS = 3;
         static const unsigned int ENCODED_CHARS = 4;
+        static const unsigned int BASE = 64;
 
         std::string _charset;
         char _padChar;
@@ -37,8 +38,8 @@ class BaseSixFour{
         std::string _lineTerminus;
         bool _enforceMaxLen;
 
-        std::string encodeOctets(const uint8_t *in) const;
-        uint8_t* decodeCharacters(const char *in) const;
+        std::string encodeOctets(const uint8_t (&in)[3]) const;
+        bool decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const;
 };
 
 #endif // BASESIXFOUR_H
