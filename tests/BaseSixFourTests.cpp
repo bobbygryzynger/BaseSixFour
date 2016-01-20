@@ -28,20 +28,35 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
     BaseSixFour b64(BaseSixFour::MIME, true);
 
     //from: https://en.wikipedia.org/wiki/Base64#Examples
-    std::string in =
+    std::string inSglPad =
         "Man is distinguished, not only by his reason, but by this singular passion from "
         "other animals, which is a lust of the mind, that by a perseverance of delight "
         "in the continued and indefatigable generation of knowledge, exceeds the short "
         "vehemence of any carnal pleasure.";
 
-    std::string expected =
+    std::string expectedSglPad =
         "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz\r\n"
         "IHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg\r\n"
         "dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlu\r\n"
         "dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo\r\n"
         "ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
 
-    ASSERT_STREQ(expected.c_str(), b64.encode(std::vector<uint8_t>(in.begin(), in.end())).c_str());
+    // Bowie - "Five Years"
+    std::string inDblPad =
+            "News guy wept when he told us Earth was really dying / "
+            "Cried so much that his face was wet / "
+            "Then I knew he was not lying";
+
+    std::string expectedDblPad =
+            "TmV3cyBndXkgd2VwdCB3aGVuIGhlIHRvbGQgdXMgRWFydGggd2FzIHJlYWxseSBkeWluZyAvIENy\r\n"
+            "aWVkIHNvIG11Y2ggdGhhdCBoaXMgZmFjZSB3YXMgd2V0IC8gVGhlbiBJIGtuZXcgaGUgd2FzIG5v\r\n"
+            "dCBseWluZw==";
+
+
+
+    ASSERT_STREQ(expectedSglPad.c_str(), b64.encode(std::vector<uint8_t>(inSglPad.begin(), inSglPad.end())).c_str());
+    ASSERT_STREQ(expectedDblPad.c_str(), b64.encode(std::vector<uint8_t>(inDblPad.begin(), inDblPad.end())).c_str());
+
 }
 
 
@@ -50,22 +65,33 @@ TEST_F(BaseSixFourTests, MIME_DecodeText){
     BaseSixFour b64(BaseSixFour::MIME, true);
 
     //from: https://en.wikipedia.org/wiki/Base64#Examples
-    std::string in =
+    std::string inSglPad =
         "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz\r\n"
         "IHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg\r\n"
         "dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlu\r\n"
         "dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo\r\n"
         "ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
 
-    std::string out =
+    std::string expectedSglPad =
         "Man is distinguished, not only by his reason, but by this singular passion from "
         "other animals, which is a lust of the mind, that by a perseverance of delight "
         "in the continued and indefatigable generation of knowledge, exceeds the short "
         "vehemence of any carnal pleasure.";
 
-    std::vector<uint8_t> outVec(out.begin(), out.end());
+    // Bowie - "Five Years"
+    std::string inDblPad =
+            "TmV3cyBndXkgd2VwdCB3aGVuIGhlIHRvbGQgdXMgRWFydGggd2FzIHJlYWxseSBkeWluZyAvIENy\r\n"
+            "aWVkIHNvIG11Y2ggdGhhdCBoaXMgZmFjZSB3YXMgd2V0IC8gVGhlbiBJIGtuZXcgaGUgd2FzIG5v\r\n"
+            "dCBseWluZw==";
 
-    ASSERT_EQ(outVec, b64.decode(in));
+    std::string expectedDblPad =
+            "News guy wept when he told us Earth was really dying / "
+            "Cried so much that his face was wet / "
+            "Then I knew he was not lying";
+
+    ASSERT_EQ(std::vector<uint8_t> (expectedSglPad.begin(), expectedSglPad.end()), b64.decode(inSglPad));
+    ASSERT_EQ(std::vector<uint8_t> (expectedDblPad.begin(), expectedDblPad.end()), b64.decode(inDblPad));
+
 }
 
 TEST_F(BaseSixFourTests, MIME_EncodeFile){
