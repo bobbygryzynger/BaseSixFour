@@ -106,7 +106,7 @@ TEST_F(BaseSixFourTests, MIME_DecodeText){
             "Cried so much that his face was wet / "
             "Then I knew he was not lying";
 
-    ASSERT_EQ(std::vector<uint8_t> (expectedNoPad.begin(), expectedSglPad.end()), b64.decode(inNoPad));
+    ASSERT_EQ(std::vector<uint8_t> (expectedNoPad.begin(), expectedNoPad.end()), b64.decode(inNoPad));
     ASSERT_EQ(std::vector<uint8_t> (expectedSglPad.begin(), expectedSglPad.end()), b64.decode(inSglPad));
     ASSERT_EQ(std::vector<uint8_t> (expectedDblPad.begin(), expectedDblPad.end()), b64.decode(inDblPad));
 
