@@ -146,14 +146,6 @@ std::vector<uint8_t> BaseSixFour::decode(const std::string &in, bool sanitizeInp
 
 }
 
-/**
- * @brief BaseSixFour::encodeOctets
- * @param in a pointer to no more than three uint8_t octets,
- *          any additional octets will be ignored. Fewer than
- *          three octets causes undefined behavior
- * @return a string of four Base64 encoded characters
- */
-
 std::string BaseSixFour::encodeOctets(const uint8_t (&in)[3]) const{
 
     using namespace std;

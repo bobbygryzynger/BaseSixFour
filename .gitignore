@@ -1,3 +1,5 @@
 *.sublime*
 build/*
 *.user
+docs/**/*
+!docs/Doxyfile
