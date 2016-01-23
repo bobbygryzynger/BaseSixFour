@@ -113,6 +113,9 @@ class BaseSixFour{
          * Whether or not the input string should be sanitized, defaults to <b>true</b>.
          *
          * \return A vector of unencoded data.
+         *
+         * \throws std::runtime_error if any of the input characters
+         *      cannot be found in the current character set.
          */
         std::vector<uint8_t> decode(const std::string &in, bool sanitizeInput = true) const;
 
@@ -204,10 +207,10 @@ class BaseSixFour{
          * A reference to an array where the decoded output
          *      will be stored.
          *
-         * \return true if the input data was successfully decoded,
-         *      false otherwise.
+         * \throws std::runtime_error if any of the input characters
+         *      cannot be found in the current character set.
          */
-        bool decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const;
+        void decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const;
 };
 
 #endif // BASESIXFOUR_H

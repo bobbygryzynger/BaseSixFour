@@ -171,7 +171,7 @@ std::string BaseSixFour::encodeOctets(const uint8_t (&in)[3]) const{
 
 }
 
-bool BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const{
+void BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const{
 
     using namespace std;
 
@@ -193,8 +193,10 @@ bool BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const
         ret[0] = (encodedIdx[0] << 2) + (encodedIdx[1] >> 4);
         ret[1] = (encodedIdx[1] << 4) + (encodedIdx[2] >> 2);
         ret[2] = (encodedIdx[2] << 6) + (encodedIdx[3]);
-        return true;
+        return;
     }
 
-    return false;
+
+    throw std::runtime_error("The input data [" + string(in) + "] "
+                            "contains characters outside of the current character set");
 }
