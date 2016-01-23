@@ -41,18 +41,6 @@
 class BaseSixFour{
 
     public:
-        /**
-         * \brief Constructor that sets the Base64 Variant to use and
-         *          whether to enforce a Variant's max line length.
-         *
-         * \param var
-         * A BaseSixFour Variant, defaults to BaseSixFour::MIME.
-         *
-         * \param enforceLineLen
-         * A boolean for whether or not to enforce
-         *      a Variant's max line length, defaults to <b>true</b>.
-         */
-        BaseSixFour(const Variant &var = BaseSixFour::MIME, bool enforceLineLen = true);
 
         /**
          * \struct Variant
@@ -74,11 +62,24 @@ class BaseSixFour{
          */
         typedef const struct{
             public:
-                static const std::string _charset;
-                static const char _padChar;
-                static const size_t _maxLineLen;
-                static const std::string _lineTerminus;
+                std::string _charset;
+                char _padChar;
+                size_t _maxLineLen;
+                std::string _lineTerminus;
         }Variant;
+
+        /**
+         * \brief Constructor that sets the Base64 Variant to use and
+         *          whether to enforce a Variant's max line length.
+         *
+         * \param var
+         * A BaseSixFour Variant, defaults to BaseSixFour::MIME.
+         *
+         * \param enforceLineLen
+         * A boolean for whether or not to enforce
+         *      a Variant's max line length, defaults to <b>true</b>.
+         */
+        BaseSixFour(const Variant &var = BaseSixFour::MIME, bool enforceLineLen = true);
 
         /**
          * \brief MIME The Base64 MIME Variant
