@@ -1,9 +1,10 @@
 /**
-* @file
-* @author Bobby Gryzynger <bobby.gryzynger@gmail.com>
-* @version 0.0.1
+* \file
+* \author Bobby Gryzynger <bobby.gryzynger@gmail.com>
+* \version 0.0.1
 *
-* @section LICENSE Copyright (c) 2016 Bobby Gryzynger
+* \section LICENSE
+* Copyright (c) 2016 Bobby Gryzynger
 *
 * Permission is hereby granted, free of charge, to any person obtaining
 * a copy of this software and associated documentation files (the "Software"),
