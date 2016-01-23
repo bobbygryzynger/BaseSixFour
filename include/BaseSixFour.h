@@ -74,10 +74,10 @@ class BaseSixFour{
          */
         typedef const struct{
             public:
-                std::string _charset;
-                char _padChar;
-                size_t _maxLineLen;
-                std::string _lineTerminus;
+                static const std::string _charset;
+                static const char _padChar;
+                static const size_t _maxLineLen;
+                static const std::string _lineTerminus;
         }Variant;
 
         /**
