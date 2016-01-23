@@ -180,7 +180,7 @@ TEST_F(BaseSixFourTests, MIME_SanitizeDecodeInput){
             "DxpKjVqwn/R/hn9L36S/g7wZnHh74b+MfF/DPBudYDE5bLIqWIweY4fI8PjZ5xWxlTgqtnGEzHGe"
             "H2YYvF57meY4rNeBcTw5mmIzWrQzatjJ5lgcvxeH8rd3kd5JHaSR2Z3d2LO7sSWd2YlmZiSWYkkk"
             "kknOa+vjGMYqMUoxilGMYpKMYpWSSVkklZJJWS0Vj+dKtWrXq1K9epUrVq1SdWtWqzlUq1atSTnU"
-            "qVKkm5TqTm3Kc5NylJtttts//9k=";
+            "qVKkm5TqTm3Kc5NylJtttts//9k";
 
    ASSERT_STREQ(expected.c_str(), b64.sanitize(input).c_str());
 

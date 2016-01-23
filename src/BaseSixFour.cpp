@@ -97,7 +97,7 @@ std::string BaseSixFour::sanitize(const std::string &in) const{
 
     using namespace std;
 
-    regex notB64("[^" + _charset + _padChar + "]");
+    regex notB64("[^" + _charset + "]");
     return regex_replace(in, notB64, "");
 
 }

@@ -107,7 +107,7 @@ class BaseSixFour{
          *      of the current character set.
          *
          * \param in
-         * The input string to decode
+         * The input string to decode.
          *
          * \param sanitizeInput
          * Whether or not the input string should be sanitized, defaults to <b>true</b>.
@@ -117,8 +117,9 @@ class BaseSixFour{
         std::vector<uint8_t> decode(const std::string &in, bool sanitizeInput = true) const;
 
         /**
-         * \brief Sanitizes a string for all non-Base64 characters,
-         * making it safe to use in a decoding operation.
+         * \brief Sanitizes a string for all non-Base64 characters, including
+         *      padding characters, making it safe to use in a decoding
+         *      operation.
          *
          * \param in
          * The input string to sanitize.
