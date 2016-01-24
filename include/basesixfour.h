@@ -42,30 +42,60 @@ class BaseSixFour{
     public:
 
         /**
-         * \struct Variant
-         * \brief Struct for defining Base64 Variants.
+         * \brief Variant
+         * \brief Class for defining Base64 Variants.
          *
          * \var Variant::_charset
          * The character set to use for encoding and decoding
          *      operations.
          *
-         * \var Variant::_padChar
+         * \var Variant::_pad
          * The character to use for padding when necessary.
          *
-         * \var Variant::_maxLineLen
+         * \var Variant::_maxLn
          * The maximum length of an encoded line.
          *
-         * \var Variant::_lineTerminus
+         * \var Variant::_lnTerm
          * The character string to use when terminating encoded
          *      lines.
          */
-        typedef const struct{
+        class Variant{
+
+            friend class BaseSixFour;
+
             public:
+
+                /**
+                 * \brief Default constructor.
+                 *
+                 * Constructs the variant as BaseSixFour::MIME.
+                 */
+                Variant();
+
+                /**
+                 * \brief Constructor which allow for custom Variant creation.
+                 *
+                 * \param chars
+                 * The character set to use.
+                 *
+                 * \param pad
+                 * The padding chracter to use.
+                 *
+                 * \param maxLn
+                 * The maximum length of an encoded line.
+                 *
+                 * \param lnTerm
+                 * The character string to use when terminating encoded
+                 *      lines.
+                 */
+                Variant(std::string chars, char pad, size_t maxLn, std::string lnTerm);
+
+            private:
                 std::string _charset;
-                char _padChar;
-                size_t _maxLineLen;
-                std::string _lineTerminus;
-        }Variant;
+                char _pad;
+                size_t _maxLn;
+                std::string _lnTerm;
+        };
 
         /**
          * \brief Constructor that sets the Base64 Variant to use.
@@ -151,28 +181,7 @@ class BaseSixFour{
          */
         static const unsigned int BASE = 64;
 
-        /**
-         * \brief The character set to use for encoding/decoding.
-         */
-        std::string _charset;
-
-        /**
-         * \brief The character to pad encoded output with.
-         */
-        char _padChar;
-
-        /**
-         * \brief The maximum length an encoded line can
-         *      be before it is terminated.
-         */
-        size_t _maxLineLen;
-
-        /**
-         * \brief The character string to use for terminating
-         *      an encoded line when BaseSixFour::_maxLineLen
-         *      is reached.
-         */
-        std::string _lineTerminus;
+        Variant _var;
 
         /**
          * \brief Encodes three octets as four Base64 characters using

@@ -1,21 +1,30 @@
 #include "basesixfour.h"
 
-const BaseSixFour::Variant BaseSixFour::MIME = {
+const BaseSixFour::Variant BaseSixFour::MIME(
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"
     "0123456789+/",
     '=',
     76,
     "\r\n"
-};
+);
+
+BaseSixFour::Variant::Variant() :
+    Variant(BaseSixFour::MIME._charset,
+            BaseSixFour::MIME._pad,
+            BaseSixFour::MIME._maxLn,
+            BaseSixFour::MIME._lnTerm){}
+
+BaseSixFour::Variant::Variant(std::string chars, char pad, size_t maxLn, std::string lnTerm){
+    this->_charset = chars;
+    this->_pad = pad;
+    this->_maxLn = maxLn;
+    this->_lnTerm = lnTerm;
+}
 
 
 BaseSixFour::BaseSixFour(const Variant &var){
-
-    this->_charset = var._charset;
-    this->_padChar = var._padChar;
-    this->_maxLineLen = var._maxLineLen;
-    this->_lineTerminus = var._lineTerminus;
+    this->_var = var;
 }
 
 std::string BaseSixFour::encode(const std::vector<uint8_t> &in, bool enforceMaxLen) const{
@@ -51,7 +60,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in, bool enforceMaxL
             inOcts[2] = 0;
             // there will only be three significant encoded characters
             // add a padding character to ensure length = 4
-            encodedChars = encodeOctets(inOcts).substr(0, 3) + _padChar;
+            encodedChars = encodeOctets(inOcts).substr(0, 3) + _var._pad;
         }
         // there is only one remaining octet
         else{
@@ -60,21 +69,21 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in, bool enforceMaxL
             inOcts[2] = 0;
             // there will only be two significant encoded characters
             // add two padding characters to ensure length = 4
-            encodedChars = encodeOctets(inOcts).substr(0, 2) + _padChar + _padChar;
+            encodedChars = encodeOctets(inOcts).substr(0, 2) + _var._pad + _var._pad;
         }
 
         // if we're enforcing the maximum line length and
         // appending the next encoded sequence will exceed the line length
         if(enforceMaxLen &&
-           (totEncodedChars + ENCODED_CHARS) / _maxLineLen > totEncodedChars / _maxLineLen){
+           (totEncodedChars + ENCODED_CHARS) / _var._maxLn > totEncodedChars / _var._maxLn){
             // look for where the line should end
             for(unsigned int j = 0; j < ENCODED_CHARS; j++){
                 //  append single character
                 ret += encodedChars.at(j);
                 // the end of the line has been reached
-                if((totEncodedChars + j+1) % _maxLineLen == 0){
+                if((totEncodedChars + j+1) % _var._maxLn == 0){
                     // add the line terminating characters
-                    ret += _lineTerminus;
+                    ret += _var._lnTerm;
                 }
             }
         }
@@ -96,7 +105,7 @@ std::string BaseSixFour::sanitize(const std::string &in) const{
 
     using namespace std;
 
-    regex notB64("[^" + _charset + "]");
+    regex notB64("[^" + _var._charset + "]");
     return regex_replace(in, notB64, "");
 
 }
@@ -111,7 +120,7 @@ std::vector<uint8_t> BaseSixFour::decode(const std::string &in, bool sanitizeInp
     vector<uint8_t> ret;
     ret.reserve(encoded.length() * (DECODED_OCTETS/ENCODED_CHARS));
 
-    size_t padPos = encoded.find(_padChar, encoded.length()-2);
+    size_t padPos = encoded.find(_var._pad, encoded.length()-2);
     size_t encodedLen = padPos != string::npos ? padPos : encoded.length();
 
     char encodedChs[4];
@@ -152,19 +161,19 @@ std::string BaseSixFour::encodeOctets(const uint8_t (&in)[3]) const{
     string ret = "";
 
     // byte 0: shift off two LSBs (least significant bit)
-    ret += _charset.at(in[0] >> 2);
+    ret += _var._charset.at(in[0] >> 2);
     // byte 0: shift off 4 MSBs (most significant bit)
     //  and mask for 6 LSBs
     // byte 1: shift off 4 LSBs
     // add results of operations on byte 0 and byte 1
-    ret += _charset.at(((in[0] << 4) & 0x3f) + (in[1] >> 4));
+    ret += _var._charset.at(((in[0] << 4) & 0x3f) + (in[1] >> 4));
     // byte 1: shift off 2 MSBs
     // byte 2: shift off 6 LSBs
     // add results of operations on byte 1 and byte 2
     //  and mask for 6 LSBs
-    ret += _charset.at(((in[1] << 2) + (in[2] >> 6)) & 0x3f);
+    ret += _var._charset.at(((in[1] << 2) + (in[2] >> 6)) & 0x3f);
     // byte 2: mask for 6 LSBs
-    ret += _charset.at(in[2] & 0x3f);
+    ret += _var._charset.at(in[2] & 0x3f);
 
     return ret;
 
@@ -175,10 +184,10 @@ void BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const
     using namespace std;
 
     size_t encodedIdx[] = {
-        _charset.find(in[0]),
-        _charset.find(in[1]),
-        _charset.find(in[2]),
-        _charset.find(in[3])
+        _var._charset.find(in[0]),
+        _var._charset.find(in[1]),
+        _var._charset.find(in[2]),
+        _var._charset.find(in[3])
     };
 
     // Base64 characters were found for all
