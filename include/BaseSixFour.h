@@ -29,7 +29,6 @@
 #define BASESIXFOUR_H
 
 #include <string>
-#include <iostream>
 #include <inttypes.h>
 #include <vector>
 #include <regex>
