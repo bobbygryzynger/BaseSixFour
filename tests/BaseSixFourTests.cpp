@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "BaseSixFour.h"
+#include "basesixfour.h"
 #include <fstream>
 
 #ifndef DATA_DIR

@@ -1,4 +1,4 @@
-#include "BaseSixFour.h"
+#include "basesixfour.h"
 
 const BaseSixFour::Variant BaseSixFour::MIME = {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
