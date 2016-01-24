@@ -10,16 +10,15 @@ const BaseSixFour::Variant BaseSixFour::MIME = {
 };
 
 
-BaseSixFour::BaseSixFour(const Variant &var, bool enforceLineLen){
+BaseSixFour::BaseSixFour(const Variant &var){
 
     this->_charset = var._charset;
     this->_padChar = var._padChar;
     this->_maxLineLen = var._maxLineLen;
     this->_lineTerminus = var._lineTerminus;
-    this->_enforceMaxLen = enforceLineLen;
 }
 
-std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
+std::string BaseSixFour::encode(const std::vector<uint8_t> &in, bool enforceMaxLen) const{
 
     using namespace std;
 
@@ -66,7 +65,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in) const{
 
         // if we're enforcing the maximum line length and
         // appending the next encoded sequence will exceed the line length
-        if(_enforceMaxLen &&
+        if(enforceMaxLen &&
            (totEncodedChars + ENCODED_CHARS) / _maxLineLen > totEncodedChars / _maxLineLen){
             // look for where the line should end
             for(unsigned int j = 0; j < ENCODED_CHARS; j++){

@@ -68,17 +68,13 @@ class BaseSixFour{
         }Variant;
 
         /**
-         * \brief Constructor that sets the Base64 Variant to use and
-         *          whether to enforce a Variant's max line length.
+         * \brief Constructor that sets the Base64 Variant to use.
          *
          * \param var
          * A BaseSixFour Variant, defaults to BaseSixFour::MIME.
          *
-         * \param enforceLineLen
-         * A boolean for whether or not to enforce
-         *      a Variant's max line length, defaults to <b>true</b>.
          */
-        BaseSixFour(const Variant &var = BaseSixFour::MIME, bool enforceLineLen = true);
+        BaseSixFour(const Variant &var = BaseSixFour::MIME);
 
         /**
          * \brief MIME The Base64 MIME Variant
@@ -94,9 +90,13 @@ class BaseSixFour{
          * \param in
          * A vector of data to Base64 encode.
          *
+         * \param enforceLineLen
+         * A boolean for whether or not to enforce
+         *      a Variant's max line length, defaults to <b>true</b>.
+         *
          * \return The data encoded as a Base64 string.
          */
-        std::string encode(const std::vector<uint8_t> &in) const;
+        std::string encode(const std::vector<uint8_t> &in, bool enforceMaxLen = true) const;
 
         /**
          * \brief Decodes an input string into its original data
@@ -173,15 +173,6 @@ class BaseSixFour{
          *      is reached.
          */
         std::string _lineTerminus;
-
-        /**
-         * \brief Whether or not BaseSixFour::_maxLineLen
-         *      should be enforced.
-         *
-         * If <b>false</b>, the encoded output will be a
-         *      single unbroken line.
-         */
-        bool _enforceMaxLen;
 
         /**
          * \brief Encodes three octets as four Base64 characters using

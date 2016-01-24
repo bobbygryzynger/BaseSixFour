@@ -25,7 +25,7 @@ class BaseSixFourTests : public ::testing::Test {
 
 TEST_F(BaseSixFourTests, MIME_EncodeText){
 
-    BaseSixFour b64(BaseSixFour::MIME, true);
+    BaseSixFour b64(BaseSixFour::MIME);
 
     std::string inNoPad =
             "What is a country? A country is a piece of land surrounded on all "
@@ -61,16 +61,16 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
             "dCBseWluZw==";
 
 
-    ASSERT_STREQ(expectedNoPad.c_str(), b64.encode(std::vector<uint8_t>(inNoPad.begin(), inNoPad.end())).c_str());
-    ASSERT_STREQ(expectedSglPad.c_str(), b64.encode(std::vector<uint8_t>(inSglPad.begin(), inSglPad.end())).c_str());
-    ASSERT_STREQ(expectedDblPad.c_str(), b64.encode(std::vector<uint8_t>(inDblPad.begin(), inDblPad.end())).c_str());
+    ASSERT_STREQ(expectedNoPad.c_str(), b64.encode(std::vector<uint8_t>(inNoPad.begin(), inNoPad.end()), true).c_str());
+    ASSERT_STREQ(expectedSglPad.c_str(), b64.encode(std::vector<uint8_t>(inSglPad.begin(), inSglPad.end()), true).c_str());
+    ASSERT_STREQ(expectedDblPad.c_str(), b64.encode(std::vector<uint8_t>(inDblPad.begin(), inDblPad.end()), true).c_str());
 
 }
 
 
 TEST_F(BaseSixFourTests, MIME_DecodeText){
 
-    BaseSixFour b64(BaseSixFour::MIME, true);
+    BaseSixFour b64(BaseSixFour::MIME);
 
 
     std::string inNoPad =
@@ -114,7 +114,7 @@ TEST_F(BaseSixFourTests, MIME_DecodeText){
 
 TEST_F(BaseSixFourTests, MIME_EncodeFile){
 
-    BaseSixFour b64(BaseSixFour::MIME, true);
+    BaseSixFour b64(BaseSixFour::MIME);
 
     std::string encoded;
     std::string expected =
@@ -153,14 +153,14 @@ TEST_F(BaseSixFourTests, MIME_EncodeFile){
     ifs.seekg(0, std::ios::beg);
     ifs.read(&charVec[0], charVec.size());
 
-    encoded =  b64.encode(std::vector<uint8_t>(charVec.begin(), charVec.end()));
+    encoded =  b64.encode(std::vector<uint8_t>(charVec.begin(), charVec.end()), true);
 
     ASSERT_STREQ(expected.c_str(), encoded.c_str());
 }
 
 TEST_F(BaseSixFourTests, MIME_SanitizeDecodeInput){
 
-    BaseSixFour b64(BaseSixFour::MIME, true);
+    BaseSixFour b64(BaseSixFour::MIME);
 
     std::string input =
             "WcYSaqVKUMXQjU9+GFzCnThj8JCUqnLhsVSiq1ZJVp/86v0pPCzhbwT+kH4q+FfBXE8OL+GODOKK\r\n"
