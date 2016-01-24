@@ -129,7 +129,7 @@ class BaseSixFour{
         std::string encode(const std::vector<uint8_t> &in, bool enforceMaxLen = true) const;
 
         /**
-         * \brief Decodes an input string into its original data
+         * \brief Decodes an input string into its original data.
          *
          * If \p sanitizeInput is <b>false</b>, the caller is responsible
          *      for ensuring that \p in doesn't contain any characters outside

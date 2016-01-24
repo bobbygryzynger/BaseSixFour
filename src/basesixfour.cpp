@@ -192,10 +192,8 @@ void BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const
 
     // Base64 characters were found for all
     // passed characters
-    if(encodedIdx[0] != string::npos &&
-       encodedIdx[1] != string::npos &&
-       encodedIdx[2] != string::npos &&
-       encodedIdx[3] != string::npos){
+    if(encodedIdx[0] < BASE && encodedIdx[1] < BASE &&
+       encodedIdx[2] < BASE && encodedIdx[3] < BASE){
         // all operations assume bits 7 & 8 are not significant
         // and are not present
         ret[0] = (encodedIdx[0] << 2) + (encodedIdx[1] >> 4);
@@ -205,6 +203,7 @@ void BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const
     }
 
 
-    throw std::runtime_error("The input data [" + string(in) + "] "
-                            "contains characters outside of the current character set");
+    throw runtime_error("The input data [" + string(in) + "] "
+                        "contains characters outside of the "
+                        "current character set");
 }
