@@ -196,7 +196,7 @@ class BaseSixFour{
         std::string encodeOctets(const uint8_t (&in)[3]) const;
 
         /**
-         * \brief Decodes four Basae64 input characters as their
+         * \brief Decodes four Base64 input characters as their
          *      original data values.
          *
          * \param in
@@ -210,6 +210,8 @@ class BaseSixFour{
          *      cannot be found in the current character set.
          */
         void decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const;
+
+        void appendEncoded(const std::string &encodedChars, const size_t &encodedCt, std::string &ret) const;
 };
 
 #endif // BASESIXFOUR_H

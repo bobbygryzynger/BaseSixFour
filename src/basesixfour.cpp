@@ -33,6 +33,7 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in, bool enforceMaxL
 
     // the Base64-encoded character string to return
     string ret = "";
+    ret.reserve(in.size() * (ENCODED_CHARS/DECODED_OCTETS));
 
     // the total size of the Base64 character string
     size_t totEncodedChars = 0;
@@ -72,25 +73,11 @@ std::string BaseSixFour::encode(const std::vector<uint8_t> &in, bool enforceMaxL
             encodedChars = encodeOctets(inOcts).substr(0, 2) + _var._pad + _var._pad;
         }
 
-        // if we're enforcing the maximum line length and
-        // appending the next encoded sequence will exceed the line length
-        if(enforceMaxLen &&
-           (totEncodedChars + ENCODED_CHARS) / _var._maxLn > totEncodedChars / _var._maxLn){
-            // look for where the line should end
-            for(unsigned int j = 0; j < ENCODED_CHARS; j++){
-                //  append single character
-                ret += encodedChars.at(j);
-                // the end of the line has been reached
-                if((totEncodedChars + j+1) % _var._maxLn == 0){
-                    // add the line terminating characters
-                    ret += _var._lnTerm;
-                }
-            }
-        }
-        // maximium line length is not enfored or
-        // the maximum line length will not be exceed by the current characters
-        // append all of the encoded characters
-        else{
+        // if we're enforcing the maximum line length and we have appropriate
+        // line termination values
+        if(enforceMaxLen && _var._maxLn > 0 && !_var._lnTerm.empty()){
+            appendEncoded(encodedChars, totEncodedChars, ret);
+        }else{
             ret += encodedChars;
         }
 
@@ -206,4 +193,27 @@ void BaseSixFour::decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const
     throw runtime_error("The input data [" + string(in) + "] "
                         "contains characters outside of the "
                         "current character set");
+}
+
+void BaseSixFour::appendEncoded(const std::string &encodedChars, const size_t &encodedCt, std::string &ret) const{
+
+    // if the next encoded sequence will exceed the line length
+    if((encodedCt + ENCODED_CHARS) / _var._maxLn > encodedCt / _var._maxLn){
+        // look for where the line should end
+        for(unsigned int j = 0; j < ENCODED_CHARS; j++){
+            //  append single character
+            ret += encodedChars.at(j);
+            // the end of the line has been reached
+            if((encodedCt + j+1) % _var._maxLn == 0){
+                // add the line terminating characters
+                ret += _var._lnTerm;
+            }
+        }
+    }
+    // the maximum line length will not be exceed by the current characters
+    // append all of the encoded characters
+    else{
+        ret += encodedChars;
+    }
+
 }
