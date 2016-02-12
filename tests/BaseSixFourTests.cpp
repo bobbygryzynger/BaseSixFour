@@ -61,10 +61,15 @@ TEST_F(BaseSixFourTests, MIME_EncodeText){
             "dCBseWluZw==";
 
 
+    // object tests
     ASSERT_STREQ(expectedNoPad.c_str(), b64.encode(std::vector<uint8_t>(inNoPad.begin(), inNoPad.end()), true).c_str());
     ASSERT_STREQ(expectedSglPad.c_str(), b64.encode(std::vector<uint8_t>(inSglPad.begin(), inSglPad.end()), true).c_str());
     ASSERT_STREQ(expectedDblPad.c_str(), b64.encode(std::vector<uint8_t>(inDblPad.begin(), inDblPad.end()), true).c_str());
 
+    // static tests
+    ASSERT_STREQ(expectedNoPad.c_str(), BaseSixFour::encodeMIME(std::vector<uint8_t>(inNoPad.begin(), inNoPad.end()), true).c_str());
+    ASSERT_STREQ(expectedSglPad.c_str(), BaseSixFour::encodeMIME(std::vector<uint8_t>(inSglPad.begin(), inSglPad.end()), true).c_str());
+    ASSERT_STREQ(expectedDblPad.c_str(), BaseSixFour::encodeMIME(std::vector<uint8_t>(inDblPad.begin(), inDblPad.end()), true).c_str());
 }
 
 
@@ -106,9 +111,15 @@ TEST_F(BaseSixFourTests, MIME_DecodeText){
             "Cried so much that his face was wet / "
             "Then I knew he was not lying";
 
+    // object tests
     ASSERT_EQ(std::vector<uint8_t> (expectedNoPad.begin(), expectedNoPad.end()), b64.decode(inNoPad));
     ASSERT_EQ(std::vector<uint8_t> (expectedSglPad.begin(), expectedSglPad.end()), b64.decode(inSglPad));
     ASSERT_EQ(std::vector<uint8_t> (expectedDblPad.begin(), expectedDblPad.end()), b64.decode(inDblPad));
+
+    // static tests
+    ASSERT_EQ(std::vector<uint8_t> (expectedNoPad.begin(), expectedNoPad.end()), BaseSixFour::decodeMIME(inNoPad));
+    ASSERT_EQ(std::vector<uint8_t> (expectedSglPad.begin(), expectedSglPad.end()),BaseSixFour::decodeMIME(inSglPad));
+    ASSERT_EQ(std::vector<uint8_t> (expectedDblPad.begin(), expectedDblPad.end()), BaseSixFour::decodeMIME(inDblPad));
 
 }
 
@@ -182,6 +193,6 @@ TEST_F(BaseSixFourTests, MIME_SanitizeDecodeInput){
             "kknOa+vjGMYqMUoxilGMYpKMYpWSSVkklZJJWS0Vj+dKtWrXq1K9epUrVq1SdWtWqzlUq1atSTnU"
             "qVKkm5TqTm3Kc5NylJtttts//9k";
 
-   ASSERT_STREQ(expected.c_str(), b64.sanitize(input).c_str());
+   ASSERT_STREQ(expected.c_str(), b64.sanitize(input, BaseSixFour::MIME.charset()).c_str());
 
 }

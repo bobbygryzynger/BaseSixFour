@@ -90,11 +90,16 @@ class BaseSixFour{
                  */
                 Variant(std::string chars, char pad, size_t maxLn, std::string lnTerm);
 
-            private:
-                std::string _charset;
-                char _pad;
-                size_t _maxLn;
-                std::string _lnTerm;
+                std::string charset() const;
+                char pad() const;
+                size_t max() const;
+                std::string terminator() const;
+
+                private:
+                    std::string _charset;
+                    char _pad;
+                    size_t _maxLn;
+                    std::string _lnTerm;
         };
 
         /**
@@ -127,6 +132,8 @@ class BaseSixFour{
          * \return The data encoded as a Base64 string.
          */
         std::string encode(const std::vector<uint8_t> &in, bool enforceMaxLen = true) const;
+        static std::string encode(const std::vector<uint8_t> &in, std::string charset, char pad, size_t maxLn, std::string lnTerm, bool enforce);
+        static std::string encodeMIME(const std::vector<uint8_t> &in, bool enforceMaxLen = true);
 
         /**
          * \brief Decodes an input string into its original data.
@@ -147,6 +154,8 @@ class BaseSixFour{
          *      cannot be found in the current character set.
          */
         std::vector<uint8_t> decode(const std::string &in, bool sanitizeInput = true) const;
+        static std::vector<uint8_t> decode(const std::string &in, const std::string &charset, char pad, bool sanitizeInput = true);
+        static std::vector<uint8_t> decodeMIME(const std::string &in, bool sanitizeInput = true);
 
         /**
          * \brief Sanitizes a string for all non-Base64 characters, including
@@ -159,7 +168,7 @@ class BaseSixFour{
          * \return A string stripped of all non-Base64 characters
          *      according to the current character set.
          */
-        std::string sanitize(const std::string &in) const;
+        static std::string sanitize(const std::string &in, const std::string &charset);
 
     private:
 
@@ -193,7 +202,8 @@ class BaseSixFour{
          * \return A string of four Base64 encoded characters in the
          *          current character set.
          */
-        std::string encodeOctets(const uint8_t (&in)[3]) const;
+        static std::string encodeOctets(const uint8_t (&in)[3], const std::string &charset);
+
 
         /**
          * \brief Decodes four Base64 input characters as their
@@ -209,9 +219,9 @@ class BaseSixFour{
          * \throws std::runtime_error if any of the input characters
          *      cannot be found in the current character set.
          */
-        void decodeCharacters(const char (&in)[4], uint8_t (&ret)[3]) const;
+        static void decodeCharacters(const char (&in)[4], uint8_t (&ret)[3], const std::string &charset);
 
-        void appendEncoded(const std::string &encodedChars, const size_t &encodedCt, std::string &ret) const;
+        static void appendEncoded(const std::string &encodedChars, const size_t &encodedCt, size_t maxLn, std::string lnTerm, std::string &ret);
 };
 
 #endif // BASESIXFOUR_H
