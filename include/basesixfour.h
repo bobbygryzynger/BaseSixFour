@@ -91,9 +91,6 @@ class BaseSixFour{
                 Variant(std::string chars, char pad, size_t maxLn, std::string lnTerm);
 
                 std::string charset() const;
-                char pad() const;
-                size_t max() const;
-                std::string terminator() const;
 
                 private:
                     std::string _charset;

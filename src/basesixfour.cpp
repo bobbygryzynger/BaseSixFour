@@ -26,18 +26,6 @@ std::string BaseSixFour::Variant::charset() const{
     return _charset;
 }
 
-char BaseSixFour::Variant::pad() const{
-    return _pad;
-}
-
-size_t BaseSixFour::Variant::max() const{
-    return _maxLn;
-}
-
-std::string BaseSixFour::Variant::terminator() const{
-    return _lnTerm;
-}
-
 BaseSixFour::BaseSixFour(const Variant &var){
     this->_var = var;
 }
